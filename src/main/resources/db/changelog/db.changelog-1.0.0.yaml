@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20221031-1
+      author: ipim
+      comment: "Init data"
+      changes:
+        - insert:
+            tableName: job
+            columns:
+              - column:
+                  name: company
+                  value: "Google"
+              - column:
+                  name: job_title
+                  value: "CEO"
+        - insert:
+            tableName: job
+            columns:
+              - column:
+                  name: company
+                  value: "Microsoft"
+              - column:
+                  name: job_title
+                  value: "Senior developer"

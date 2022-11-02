@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/phonebook
+    username: postgres
+    password: 123
+  jpa:
+    show-sql: false
