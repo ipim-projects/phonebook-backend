@@ -12,7 +12,6 @@ import java.util.Set;
 @Setter
 @Entity
 @Table
-@ToString
 public class Job implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

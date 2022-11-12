@@ -3,3 +3,15 @@ GET http://localhost:8080/jobs
 
 ###
 GET http://localhost:8080/jobs/2
+
+###
+GET http://localhost:8080/employees
+
+###
+GET http://localhost:8080/employees/1
+
+###
+GET http://localhost:8080/employees/1/job
+
+###
+GET http://localhost:8080/jobs/1/employees

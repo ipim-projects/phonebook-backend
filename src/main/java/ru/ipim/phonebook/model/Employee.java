@@ -12,7 +12,6 @@ import java.util.Date;
 @Setter
 @Entity
 @Table
-@ToString
 public class Employee implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
