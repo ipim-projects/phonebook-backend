@@ -22,3 +22,45 @@ databaseChangeLog:
               - column:
                   name: job_title
                   value: "Senior developer"
+        - insert:
+            tableName: employee
+            columns:
+              - column:
+                  name: first_name
+                  value: "Ilya"
+              - column:
+                  name: last_name
+                  value: "Pimenov"
+              - column:
+                  name: birthdate
+                  value: 1982-12-30
+              - column:
+                  name: mobile_phone
+                  value: "79262637373"
+              - column:
+                  name: email
+                  value: "ipimenov@gmail.com"
+              - column:
+                  name: job_id
+                  value: "1"
+        - insert:
+            tableName: employee
+            columns:
+              - column:
+                  name: first_name
+                  value: "Иван"
+              - column:
+                  name: last_name
+                  value: "Иванов"
+              - column:
+                  name: birthdate
+                  value: 1985-09-23
+              - column:
+                  name: mobile_phone
+                  value: "79999990099"
+              - column:
+                  name: work_phone
+                  value: "39393"
+              - column:
+                  name: email
+                  value: "ivan@gmail.com"

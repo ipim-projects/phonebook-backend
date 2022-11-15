@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Set;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
@@ -26,7 +25,4 @@ public class Job implements Serializable {
 
     @Column
     private String address;
-
-    @OneToMany(mappedBy = "job", targetEntity = Employee.class, fetch = FetchType.LAZY)
-    private Set<Employee> employees;
 }

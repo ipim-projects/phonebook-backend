@@ -1,6 +1,9 @@
 package ru.ipim.phonebook.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,6 +15,7 @@ import java.util.Date;
 @Setter
 @Entity
 @Table
+@DynamicInsert
 public class Employee implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,16 +32,22 @@ public class Employee implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date birthdate;
 
-    @Column(name = "mobile_phone", nullable = false)
+    @Column(name = "mobile_phone", unique = true, nullable = false)
     private String mobilePhone;
 
     @Column(name = "work_phone")
     private String workPhone;
 
-    @Column
+    @Column(unique = true)
     private String email;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "created_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonIgnore
+    @ColumnDefault("now()")
+    private Date createdAt;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "job_id")
     private Job job;
 }

@@ -8,10 +8,21 @@ GET http://localhost:8080/jobs/2
 GET http://localhost:8080/employees
 
 ###
+POST http://localhost:8080/employees
+Content-Type: application/json
+
+{
+  "firstName": "Elon",
+  "lastName": "Musk",
+  "birthdate": "1979-08-24",
+  "mobilePhone": "5008762372",
+  "email": "musk@spacex.com",
+  "job": {
+    "id": "2"
+  }
+}
+
+###
 GET http://localhost:8080/employees/1
 
 ###
-GET http://localhost:8080/employees/1/job
-
-###
-GET http://localhost:8080/jobs/1/employees
