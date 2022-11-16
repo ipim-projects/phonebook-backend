@@ -7,10 +7,10 @@ CREATE TABLE "employee"
     "first_name"   VARCHAR(50)        NOT NULL,
     "last_name"    VARCHAR(50)        NOT NULL,
     "birthdate"    DATE               NOT NULL,
-    "mobile_phone" CHAR(15)           NOT NULL,
-    "work_phone"   CHAR(15),
+    "mobile_phone" VARCHAR(15)        NOT NULL,
+    "work_phone"   VARCHAR(15),
     "email"        VARCHAR(100),
-    "created_at"   TIMESTAMP          DEFAULT now(),
+    "created_at"   TIMESTAMP DEFAULT now(),
     "job_id"       INTEGER
 );
 
