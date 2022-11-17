@@ -4,10 +4,10 @@
 CREATE TABLE "employee"
 (
     "id"           SERIAL PRIMARY KEY NOT NULL,
-    "first_name"   VARCHAR(50)        NOT NULL,
-    "last_name"    VARCHAR(50)        NOT NULL,
+    "first_name"   VARCHAR(10)        NOT NULL,
+    "last_name"    VARCHAR(20)        NOT NULL,
     "birthdate"    DATE               NOT NULL,
-    "mobile_phone" VARCHAR(15)        NOT NULL,
+    "mobile_phone" CHAR(13)           NOT NULL,
     "work_phone"   VARCHAR(15),
     "email"        VARCHAR(100),
     "created_at"   TIMESTAMP DEFAULT now(),
