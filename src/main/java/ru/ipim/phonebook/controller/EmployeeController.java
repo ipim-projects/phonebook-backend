@@ -1,9 +1,6 @@
 package ru.ipim.phonebook.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import ru.ipim.phonebook.model.Job;
 import ru.ipim.phonebook.repository.EmployeeRepository;
@@ -35,5 +32,10 @@ public class EmployeeController {
             newEmployee.setJob(job);
         }
         return employeeRepository.save(newEmployee);
+    }
+
+    @GetMapping("/employees/{employeeId}/coworkers-company")
+    public List<Employee> getCompanyCoworkers(@PathVariable("employeeId") Long employeeId) {
+        return employeeRepository.getCompanyCoworkers(employeeId);
     }
 }
