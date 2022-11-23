@@ -8,6 +8,7 @@ import ru.ipim.phonebook.model.Employee;
 import ru.ipim.phonebook.repository.JobRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class EmployeeController {
@@ -22,6 +23,11 @@ public class EmployeeController {
     @GetMapping("/employees")
     public List<Employee> getAllEmployees() {
         return employeeRepository.findAll();
+    }
+
+    @GetMapping("/employees/{employeeId}")
+    public Optional<Employee> getEmployee(@PathVariable("employeeId") Long employeeId) {
+        return employeeRepository.findById(employeeId);
     }
 
     @PostMapping("/employees")
