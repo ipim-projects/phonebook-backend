@@ -8,6 +8,9 @@ databaseChangeLog:
             tableName: job
             columns:
               - column:
+                  name: id
+                  value: 50
+              - column:
                   name: company
                   value: "Google"
               - column:
@@ -17,6 +20,9 @@ databaseChangeLog:
             tableName: job
             columns:
               - column:
+                  name: id
+                  value: 51
+              - column:
                   name: company
                   value: "Microsoft"
               - column:
@@ -25,6 +31,9 @@ databaseChangeLog:
         - insert:
             tableName: employee
             columns:
+              - column:
+                  name: id
+                  value: 50
               - column:
                   name: first_name
                   value: "Ilya"
@@ -47,6 +56,9 @@ databaseChangeLog:
             tableName: employee
             columns:
               - column:
+                  name: id
+                  value: 51
+              - column:
                   name: first_name
                   value: "Иван"
               - column:
@@ -60,7 +72,7 @@ databaseChangeLog:
                   value: "123-456-78-90"
               - column:
                   name: work_phone
-                  value: "39393"
+                  value: "123-456-78-91"
               - column:
                   name: email
                   value: "ivan@gmail.com"

@@ -1,7 +1,23 @@
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   datasource:
-    url: jdbc:postgresql://localhost:5432/phonebook
+    url: jdbc:postgresql://localhost:5432/phonebook?encoding=UTF8
     username: postgres
     password: 123
+    driver-class-name: org.postgresql.Driver
   jpa:
     show-sql: false
+    generate-ddl: false
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+#### Вариант 2 создание таблиц в БД с помощью flywaydb
+#  flyway:
+#    locations: classpath:flywaydb_scripts
+#    mixed: true
