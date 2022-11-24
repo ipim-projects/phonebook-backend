@@ -79,7 +79,6 @@ public class EmployeeController {
         return entities;
 
     }
-
     @GetMapping("/employees-statistic")
     @ApiOperation("Статистика - Количество записей в справочнике")
     public String stat(){
