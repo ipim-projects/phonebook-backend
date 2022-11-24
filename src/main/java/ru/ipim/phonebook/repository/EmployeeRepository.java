@@ -29,7 +29,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     // Выгрузка тип 2 : сотрудники с привязкой к местам работы, сортировка по Employee.id
     // Поля: фамилия,имя, мобильный телефон, email +  Наименование организации, Должность, Рабочий адрес.
-    @Query(value = "SELECT new ru.ipim.phonebook.model.EmpExportType2(e.firstName, e.lastName, e.mobilePhone, e.email, j.company, j.jobTitle, j.address) FROM Employee AS e JOIN Job As j ON j.id = e.jobId ORDER BY e.id")
+    @Query(value = "SELECT new ru.ipim.phonebook.model.EmpExportType2(e.firstName, e.lastName, e.mobilePhone, e.email, j.company, j.jobTitle, j.address) FROM Employee AS e LEFT JOIN Job As j ON j.id = e.jobId ORDER BY e.id" )
     List<EmpExportType2> exportType2WithJPQL();
     //@Query(value = "SELECT new ru.ipim.phonebook.model.EmpExportType2(e.firstName, e.lastName, e.birthdate, e.workPhone, e.mobilePhone, e.email, j.company, j.jobTitle, j.address) FROM Job AS j, Employee AS e Where (e.jobId is not null) and e.jobId=j.id ORDER BY e.id")
     //List<EmpExportType2> exportType2WithJPQL();
