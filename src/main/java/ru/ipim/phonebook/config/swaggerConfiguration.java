@@ -39,7 +39,7 @@ public class swaggerConfiguration {
     }
 
     private ApiInfo apiInfo() {
-        ApiInfo apiInfo = new ApiInfo("REST API", "Описание использования API.", "API TOS", "Термины", new Contact(" ", "www.example.com", "myeaddress@company.com"), " ", " ", Collections.emptyList());
+        ApiInfo apiInfo = new ApiInfo("REST API", "РћРїРёСЃР°РЅРёРµ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ API.", "API TOS", "РўРµСЂРјРёРЅС‹", new Contact(" ", "www.example.com", "myeaddress@company.com"), " ", " ", Collections.emptyList());
 //      ApiInfo apiInfo = new ApiInfo("My REST API", "Some custom description of API.", "API TOS", "Terms of service", new Contact("John Doe", "www.example.com", "myeaddress@company.com"), "License of API", "API license URL", Collections.emptyList());
         return apiInfo;
     }
