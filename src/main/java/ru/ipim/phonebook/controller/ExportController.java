@@ -48,8 +48,9 @@ public class ExportController {
     // Пример обращения: type=employee-job
     //  http://localhost:8080/export/?type=employee-job&startdate=2022-11-09&enddate=2022-12-12
     @GetMapping("/export/")
-    @ApiOperation("Экспорт записей. phonebook = тип выгрузки 1, employee-job = тип выгрузки 2 ")
-    public @ResponseBody List<JSONObject>  exportTypesOneAndTwo(@RequestParam String type) {
+    @ApiOperation("Выгрузка записей. phonebook = тип выгрузки 1, employee-job = тип выгрузки 2 ")
+    public @ResponseBody List<JSONObject>  exportTypesOneAndTwo(@RequestParam String type,@RequestParam String  startdate,@RequestParam String  enddate) {
+      log.info("Выгрузка с type = '{}', startdate = '{}', enddate = '{}'", type, startdate, enddate);
       // результат формирования экспорта будет здесь:
       List<JSONObject> entities = new ArrayList<JSONObject>();
 
