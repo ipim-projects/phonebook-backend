@@ -26,13 +26,16 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     // поля : Фамилия, Имя, Рабочий телефон, Мобильный телефон, e-mail, Дата рождения
     @Query(value = "SELECT new ru.ipim.phonebook.model.EmpExportType1(e.firstName, e.lastName, e.birthdate, e.workPhone, e.mobilePhone, e.email) FROM Employee AS e ORDER BY e.lastName, e.firstName")
     List<EmpExportType1> exportType1WithJPQL();
+    @Query(value = "SELECT new ru.ipim.phonebook.model.EmpExportType1(e.firstName, e.lastName, e.birthdate, e.workPhone, e.mobilePhone, e.email) FROM Employee AS e Where e.createdAt between to_date(:d1,'YYYY-MM-DD') and to_date(:d2,'YYYY-MM-DD') ORDER BY e.lastName, e.firstName")
+    List<EmpExportType1> exportType1dWithJPQL(String d1, String d2);
 
     // Выгрузка тип 2 : сотрудники с привязкой к местам работы, сортировка по Employee.id
     // Поля: фамилия,имя, мобильный телефон, email +  Наименование организации, Должность, Рабочий адрес.
     @Query(value = "SELECT new ru.ipim.phonebook.model.EmpExportType2(e.firstName, e.lastName, e.mobilePhone, e.email, j.company, j.jobTitle, j.address) FROM Employee AS e LEFT JOIN Job As j ON j.id = e.jobId ORDER BY e.id" )
     List<EmpExportType2> exportType2WithJPQL();
-    //@Query(value = "SELECT new ru.ipim.phonebook.model.EmpExportType2(e.firstName, e.lastName, e.birthdate, e.workPhone, e.mobilePhone, e.email, j.company, j.jobTitle, j.address) FROM Job AS j, Employee AS e Where (e.jobId is not null) and e.jobId=j.id ORDER BY e.id")
-    //List<EmpExportType2> exportType2WithJPQL();
+
+    @Query(value = "SELECT new ru.ipim.phonebook.model.EmpExportType2(e.firstName, e.lastName, e.mobilePhone, e.email, j.company, j.jobTitle, j.address) FROM Employee AS e LEFT JOIN Job As j ON j.id = e.jobId Where e.createdAt between to_date(:d1,'YYYY-MM-DD') and to_date(:d2,'YYYY-MM-DD') ORDER BY e.id" )
+    List<EmpExportType2> exportType2dWithJPQL(String d1, String d2);
 
     @Query(value = "SELECT new ru.ipim.phonebook.model.StatCompanys( j.company AS company, COUNT(e.jobId) AS cnt) FROM Employee AS e JOIN Job As j ON j.id = e.jobId  GROUP BY j.company ORDER BY cnt DESC, company")
     List<StatCompanys> findGroupByCompanysWithJPQL();
@@ -54,6 +57,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     // 3. Поиск сотрудников из разных организаций, но работающих по одному и тому же адресу с абонентом n
     @Query(value = "SELECT new ru.ipim.phonebook.model.EmpExportType1(e.firstName, e.lastName, e.birthdate, e.workPhone, e.mobilePhone, e.email) FROM Employee AS e JOIN Job As j ON j.id = e.jobId Where (e.jobId is not null) and (e.id <> :n) and j.address = (SELECT DISTINCT jj.address from Job jj, Employee AS ee where jj.id=ee.jobId and ee.id = :n) ORDER BY e.lastName, e.firstName")
     List<EmpExportType1> findCoworkersAddressWithJPQL(long n);
-
 
 }
