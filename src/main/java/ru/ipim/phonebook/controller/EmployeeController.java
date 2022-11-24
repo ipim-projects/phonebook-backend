@@ -112,8 +112,8 @@ public class EmployeeController {
     // 1. Флаг  - "сотрудники одной и той же с ним организации"
     @GetMapping(value = "/{employeeId}/coworkers-company")
     @ApiOperation("Поиск коллег по входному параметру (employeeId): сотрудники одной и той же с ним организации")
-    public @ResponseBody List<JSONObject> findCoworkersCompany(@PathVariable("{employeeId}") @Min(1) Long empId) {
-        List<EmpExportType1> entityList = employeeRepository.findCoworkersCompanyWithJPQL(empId);
+    public @ResponseBody List<JSONObject> findCoworkersCompany(@PathVariable("{employeeId}") @Min(1) Long employeeId) {
+        List<EmpExportType1> entityList = employeeRepository.findCoworkersCompanyWithJPQL(employeeId);
 
         List<JSONObject> entities = new ArrayList<JSONObject>();
         for (EmpExportType1 n : entityList) {
@@ -126,7 +126,7 @@ public class EmployeeController {
             entity.put("email", n.getEmail());
             entities.add(entity);
         }
-        log.info("Результаты поиска флаг 1: 'коллеги по организации' для сотрудника с id = {}, количество записей: {}", empId, entityList.stream().count());
+        log.info("Результаты поиска флаг 1: 'коллеги по организации' для сотрудника с id = {}, количество записей: {}", employeeId, entityList.stream().count());
         log.info("Подготовлены следующие данные: {}", entities);
         return entities;
     }
@@ -136,8 +136,8 @@ public class EmployeeController {
     // 2. Флаг  - "сотрудники из разных организаций, но с такой же должностью"
     @GetMapping(value = "/{employeeId}/coworkers-job")
     @ApiOperation("Поиск коллег по входному параметру (employeeId): сотрудники из разных организаций, но с такой же должностью")
-    public @ResponseBody List<JSONObject> findCoworkersJobTitle(@PathVariable("employeeId") @Min(1) Long empId) {
-        List<EmpExportType1> entityList = employeeRepository.findCoworkersJobTitleWithJPQL(empId);
+    public @ResponseBody List<JSONObject> findCoworkersJobTitle(@PathVariable("employeeId") @Min(1) Long employeeId) {
+        List<EmpExportType1> entityList = employeeRepository.findCoworkersJobTitleWithJPQL(employeeId);
 
         List<JSONObject> entities = new ArrayList<JSONObject>();
         for (EmpExportType1 n : entityList) {
@@ -150,7 +150,7 @@ public class EmployeeController {
             entity.put("email", n.getEmail());
             entities.add(entity);
         }
-        log.info("Результаты поиска флаг 2: 'коллеги по должности' для сотрудника с id = {}, количество записей: {}", empId, entityList.stream().count());
+        log.info("Результаты поиска флаг 2: 'коллеги по должности' для сотрудника с id = {}, количество записей: {}", employeeId, entityList.stream().count());
         log.info("Подготовлены следующие данные: {}", entities);
         return entities;
     }
@@ -159,8 +159,8 @@ public class EmployeeController {
     // 3. Флаг  - "сотрудники из разных организаций, но работающих с ним по одному и тому же адресу"
     @GetMapping(value = "/{employeeId}/coworkers-address")
     @ApiOperation("Поиск коллег по входному параметру (employeeId): сотрудники из разных организаций, но работающих с ним по одному и тому же адресу")
-    public @ResponseBody List<JSONObject> findCoworkersAddress(@PathVariable("employeeId") @Min(1) Long empId) {
-        List<EmpExportType1> entityList = employeeRepository.findCoworkersAddressWithJPQL(empId);
+    public @ResponseBody List<JSONObject> findCoworkersAddress(@PathVariable("employeeId") @Min(1) Long employeeId) {
+        List<EmpExportType1> entityList = employeeRepository.findCoworkersAddressWithJPQL(employeeId);
 
         List<JSONObject> entities = new ArrayList<JSONObject>();
         for (EmpExportType1 n : entityList) {
@@ -173,7 +173,7 @@ public class EmployeeController {
             entity.put("email", n.getEmail());
             entities.add(entity);
         }
-        log.info("Результаты поиска флаг 3: 'коллеги по адресу' для сотрудника с id = {}, количество записей: {}", empId, entityList.stream().count());
+        log.info("Результаты поиска флаг 3: 'коллеги по адресу' для сотрудника с id = {}, количество записей: {}", employeeId, entityList.stream().count());
         log.info("Подготовлены следующие данные: {}", entities);
         return entities;
     }
@@ -194,8 +194,8 @@ public class EmployeeController {
      */
     @GetMapping(value = "/employees/{employeeId}")
     @ApiOperation("Получение одиночной записи по employee.id")
-    public Optional<Employee> findEmp(@PathVariable("empId") @Min(1) int empId) {
-        return employeeRepository.findById((long) empId);
+    public Optional<Employee> findEmp(@PathVariable("employeeId") @Min(1) int employeeId) {
+        return employeeRepository.findById((long) employeeId);
     }
 
     // Выгрузка тип 1 : Телефонная книга с сортировкой по фамилии и имени
@@ -252,11 +252,11 @@ public class EmployeeController {
     @PutMapping(value = "/employee-update/{employeeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation("Обновление существующей записи")
-    public void updateEmp(@PathVariable("empId") @Min(1) int empId, @Valid @RequestBody Employee empRequest) {
-        log.info("Вызов Update Employee empId = {}, empRequest = {}", empId, empRequest);
+    public void updateEmp(@PathVariable("employeeId") @Min(1) int employeeId, @Valid @RequestBody Employee empRequest) {
+        log.info("Вызов Update Employee employeeId = {}, empRequest = {}", employeeId, empRequest);
 
-        final Optional<Employee> emp = employeeRepository.findById((long) empId);
-        final Employee empModel = emp.orElseThrow(() -> new ResourceNotFoundException("Сотрудник с идентификатором = {"+empId+"} не найден"));
+        final Optional<Employee> emp = employeeRepository.findById((long) employeeId);
+        final Employee empModel = emp.orElseThrow(() -> new ResourceNotFoundException("Сотрудник с идентификатором = {"+employeeId+"} не найден"));
 
         empModel.setFirstName(empRequest.getFirstName());
         empModel.setLastName(empRequest.getLastName());
@@ -272,9 +272,9 @@ public class EmployeeController {
     @DeleteMapping(value = "/employee-delete/{employeeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation("Удаление записи")
-    public void deleteEmp(@PathVariable("empId") @Min(1) int empId) {
-        log.info("Вызов удаление из таблицы Employee для empId = {}", empId);
-        employeeRepository.deleteById((long) empId);
+    public void deleteEmp(@PathVariable("employeeId") @Min(1) int employeeId) {
+        log.info("Вызов удаление из таблицы Employee для employeeId = {}", employeeId);
+        employeeRepository.deleteById((long) employeeId);
     }
 
 }
