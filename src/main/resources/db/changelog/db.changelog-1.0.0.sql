@@ -126,9 +126,9 @@ VALUES
        (45,'Nongfu Spring','Программист','AddressNongfu Spring'),
        (46,'Inditex','Программист','AddressInditex'),
        (47,'Bloomberg','Программист','AddressBloomberg'),
-       (48,'Walmart','Программист','AddressWalmart');
-       (50,'Google','CEO', 'USA 117153, Google');
-       (51,'Microsoft', 'Senior developer', 'Moscow-City')
+       (48,'Walmart','Программист','AddressWalmart'),
+       (50,'Google','CEO', 'USA 117153, Google'),
+       (51,'Microsoft', 'Senior developer', 'Moscow-City');
 
 ------------------------------------------------------------------------------------------------------------------
 -- Наполнение таблицы "Телефонный справочник" данными
