@@ -26,7 +26,6 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- Вариант 1 с использованием liquibase -->
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
@@ -36,13 +35,6 @@
             <artifactId>liquibase-maven-plugin</artifactId>
             <version>4.11.0</version>
         </dependency>
-
-        <!-- Вариант 2 с использованием flywaydb
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
-        </dependency>
-         -->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

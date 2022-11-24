@@ -17,7 +17,3 @@ logging:
     org:
       springframework:
         web: DEBUG
-#### Вариант 2 создание таблиц в БД с помощью flywaydb
-#  flyway:
-#    locations: classpath:flywaydb_scripts
-#    mixed: true
