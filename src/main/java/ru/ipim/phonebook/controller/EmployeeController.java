@@ -1,6 +1,5 @@
 package ru.ipim.phonebook.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,13 +11,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.minidev.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import liquibase.pro.packaged.T;
 
 import ru.ipim.phonebook.repository.EmployeeRepository;
 import ru.ipim.phonebook.repository.JobRepository;
 
 import ru.ipim.phonebook.model.Employee;
-import ru.ipim.phonebook.model.StatCompanys;
 import ru.ipim.phonebook.model.EmpExportType1;
 
 import javax.validation.Valid;
