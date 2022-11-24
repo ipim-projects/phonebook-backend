@@ -1,5 +1,6 @@
 package ru.ipim.phonebook.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,14 +50,32 @@ public class ExportController {
     //  http://localhost:8080/export/?type=employee-job&startdate=2022-11-09&enddate=2022-12-12
     @GetMapping("/export/")
     @ApiOperation("Выгрузка записей. phonebook = тип выгрузки 1, employee-job = тип выгрузки 2 ")
-    public @ResponseBody List<JSONObject>  exportTypesOneAndTwo(@RequestParam String type,@RequestParam String  startdate,@RequestParam String  enddate) {
+    public @ResponseBody List<JSONObject>  exportTypesOneAndTwo(@RequestParam String type,@RequestParam(required = false) String  startdate,@RequestParam(required = false) String  enddate) {
       log.info("Выгрузка с type = '{}', startdate = '{}', enddate = '{}'", type, startdate, enddate);
-      // результат формирования экспорта будет здесь:
+      // результат формирования экспорта
       List<JSONObject> entities = new ArrayList<JSONObject>();
 
       if (Objects.equals(type, "phonebook")) {
           log.info("Запуск выгрузки тип 1. Телефонная книга");
-          List<EmpExportType1> entityList = employeeRepository.exportType1WithJPQL();
+          List<EmpExportType1> entityList;
+
+          if (StringUtils.isNotBlank(startdate) && StringUtils.isNotBlank(enddate)) {
+              log.info("Не пустые startdate = '{}', enddate = '{}'", startdate, enddate);
+              // Не задана начальная дата
+              if (StringUtils.isBlank(startdate)) {
+                  entityList = employeeRepository.exportType1dWithJPQL("0001-01-01", enddate);
+              }
+              // Не задана конечная дата
+              else if (StringUtils.isBlank(enddate)){
+                  entityList = employeeRepository.exportType1dWithJPQL(startdate, "9999-12-31");
+              }
+              // обе даты
+              else entityList = employeeRepository.exportType1dWithJPQL(startdate, enddate);
+          }
+          else {
+              // без указания дат - все записи
+              entityList = employeeRepository.exportType1WithJPQL();
+          }
 
           for (EmpExportType1 n : entityList) {
               JSONObject entity = new JSONObject();
@@ -73,7 +92,25 @@ public class ExportController {
       }
       else if (Objects.equals(type, "employee-job")) {
           log.info("Запуск выгрузки тип 1. Отдельные поля Телефонной книги + поля из Место работы");
-          List<EmpExportType2> entityList = employeeRepository.exportType2WithJPQL();
+          List<EmpExportType2> entityList ;
+
+          if (StringUtils.isNotBlank(startdate) && StringUtils.isNotBlank(enddate)) {
+              log.info("Не пустые startdate = '{}', enddate = '{}'", startdate, enddate);
+              // Не задана начальная дата
+              if (StringUtils.isBlank(startdate)) {
+                  entityList = employeeRepository.exportType2dWithJPQL("0001-01-01", enddate);
+              }
+              // Не задана конечная дата
+              else if (StringUtils.isBlank(enddate)){
+                  entityList = employeeRepository.exportType2dWithJPQL(startdate, "9999-12-31");
+              }
+              // обе даты
+              else entityList = employeeRepository.exportType2dWithJPQL(startdate, enddate);
+          }
+          else {
+              // без указания дат - все записи
+              entityList = employeeRepository.exportType2WithJPQL();
+          }
 
           for (EmpExportType2 n : entityList) {
               JSONObject entity = new JSONObject();
@@ -112,7 +149,7 @@ public class ExportController {
         String fileready = filename + ".ready";
         try (PrintWriter out = new PrintWriter(new FileWriter(fileready))) {
             out.write("");
-            log.info("Записан файл-флаг: {}", filetxt);
+            log.info("Записан файл-флаг: {}", fileready);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -120,7 +157,7 @@ public class ExportController {
         return entities;
     }
 
-    // Все записи талицы Employee дополненные местом работы, должностью, адресом
+    // Записи талицы Employee дополненные местом работы, должностью, адресом, если нет места работы, то запись не выводится
     @GetMapping("/export-test")
     @ApiOperation("Получение списка всех записей: join employee + job. Сортировка по Фамилии и имени")
     public @ResponseBody List<JSONObject> findEmployeesJobs() {
@@ -140,7 +177,7 @@ public class ExportController {
             entity.put("address", n.getAddress());
             entities.add(entity);
         }
-        log.info("Получение списка всех записей: join employee + job, количество записей: {}", entityList.stream().count());
+        log.info("Получение списка всех записей: join employee + job, количество записей: {}", (long) entityList.size());
         log.info("Подготовлены следующие данные: {}", entities);
         return entities;
 
