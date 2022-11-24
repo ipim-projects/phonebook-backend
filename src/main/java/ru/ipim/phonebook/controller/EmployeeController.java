@@ -107,23 +107,13 @@ public class EmployeeController {
     }
 
 
-//    @PostMapping("/employees")
-//    Employee createOrSaveEmployee(@RequestBody Employee newEmployee) {
-//        Job job = newEmployee.getJobId();
-//        if (job != null && job.getId() != null) {
-//            job = jobRepository.findById(job.getId()).get();
-//            newEmployee.setJobId(job);
-//        }
-//        return employeeRepository.save(newEmployee);
-//    }
-
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Веб-форма поиска коллег по выбранному абоненту, в зависимости от выбранного флага:
     // 1. Флаг  - "сотрудники одной и той же с ним организации"
-    @GetMapping(value = "/coworkers-company/{empId}")
-    @ApiOperation("Поиск коллег по входному параметру (employee.id): сотрудники одной и той же с ним организации")
-    public @ResponseBody List<JSONObject> findCoworkersCompany(@PathVariable("empId") @Min(1) int empId) {
-        List<EmpExportType1> entityList = employeeRepository.findCoworkersCompanyWithJPQL((long) empId);
+    @GetMapping(value = "/{employeeId}/coworkers-company")
+    @ApiOperation("Поиск коллег по входному параметру (employeeId): сотрудники одной и той же с ним организации")
+    public @ResponseBody List<JSONObject> findCoworkersCompany(@PathVariable("{employeeId}") @Min(1) Long empId) {
+        List<EmpExportType1> entityList = employeeRepository.findCoworkersCompanyWithJPQL(empId);
 
         List<JSONObject> entities = new ArrayList<JSONObject>();
         for (EmpExportType1 n : entityList) {
@@ -144,10 +134,10 @@ public class EmployeeController {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Веб-форма поиска коллег по выбранному абоненту, в зависимости от выбранного флага:
     // 2. Флаг  - "сотрудники из разных организаций, но с такой же должностью"
-    @GetMapping(value = "/coworkers-job/{empId}")
-    @ApiOperation("Поиск коллег - сотрудники из разных организаций, но с такой же должностью")
-    public @ResponseBody List<JSONObject> findCoworkersJobTitle(@PathVariable("empId") @Min(1) int empId) {
-        List<EmpExportType1> entityList = employeeRepository.findCoworkersJobTitleWithJPQL((long) empId);
+    @GetMapping(value = "/{employeeId}/coworkers-job")
+    @ApiOperation("Поиск коллег по входному параметру (employeeId): сотрудники из разных организаций, но с такой же должностью")
+    public @ResponseBody List<JSONObject> findCoworkersJobTitle(@PathVariable("employeeId") @Min(1) Long empId) {
+        List<EmpExportType1> entityList = employeeRepository.findCoworkersJobTitleWithJPQL(empId);
 
         List<JSONObject> entities = new ArrayList<JSONObject>();
         for (EmpExportType1 n : entityList) {
@@ -167,10 +157,10 @@ public class EmployeeController {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Веб-форма поиска коллег по выбранному абоненту, в зависимости от выбранного флага:
     // 3. Флаг  - "сотрудники из разных организаций, но работающих с ним по одному и тому же адресу"
-    @GetMapping(value = "/coworkers-address/{empId}")
-    @ApiOperation("Поиск коллег - сотрудники из разных организаций, но работающих с ним по одному и тому же адресу")
-    public @ResponseBody List<JSONObject> findCoworkersAddress(@PathVariable("empId") @Min(1) int empId) {
-        List<EmpExportType1> entityList = employeeRepository.findCoworkersAddressWithJPQL((long) empId);
+    @GetMapping(value = "/{employeeId}/coworkers-address")
+    @ApiOperation("Поиск коллег по входному параметру (employeeId): сотрудники из разных организаций, но работающих с ним по одному и тому же адресу")
+    public @ResponseBody List<JSONObject> findCoworkersAddress(@PathVariable("employeeId") @Min(1) Long empId) {
+        List<EmpExportType1> entityList = employeeRepository.findCoworkersAddressWithJPQL(empId);
 
         List<JSONObject> entities = new ArrayList<JSONObject>();
         for (EmpExportType1 n : entityList) {
@@ -190,7 +180,7 @@ public class EmployeeController {
 
     /**
      * Вставка новой записи в таблицу employee
-     * SQL_UPDATE_PROFILE = "insert into employee (first_name,last_name, work_phone, mobile_phone, email, birthdate, job_id) values (:firstName,:lastName, :work_phone, :mobile_phone, :email, :birthdate, :job_id)";
+     * SQL_UPDATE_PROFILE = "insert into employee (first_name, last_name, work_phone, mobile_phone, email, birthdate, job_id) values (:firstName,:lastName, :work_phone, :mobile_phone, :email, :birthdate, :job_id)";
      */
     @PostMapping("/employee-add")
     @ResponseStatus(HttpStatus.CREATED)
@@ -202,7 +192,7 @@ public class EmployeeController {
     /**
      * Read single Employee
      */
-    @GetMapping(value = "/employees/{empId}")
+    @GetMapping(value = "/employees/{employeeId}")
     @ApiOperation("Получение одиночной записи по employee.id")
     public Optional<Employee> findEmp(@PathVariable("empId") @Min(1) int empId) {
         return employeeRepository.findById((long) empId);
@@ -259,7 +249,7 @@ public class EmployeeController {
      * Update Employee
      * SQL_UPDATE_PROFILE = "update employee set first_name = :firstName, last_name = :lastName, .... where id = :id";
      */
-    @PutMapping(value = "/employee-update/{empId}")
+    @PutMapping(value = "/employee-update/{employeeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation("Обновление существующей записи")
     public void updateEmp(@PathVariable("empId") @Min(1) int empId, @Valid @RequestBody Employee empRequest) {
@@ -279,13 +269,12 @@ public class EmployeeController {
         employeeRepository.save(empModel);
     }
 
-    @DeleteMapping(value = "/employee-delete/{empId}")
+    @DeleteMapping(value = "/employee-delete/{employeeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation("Удаление записи")
     public void deleteEmp(@PathVariable("empId") @Min(1) int empId) {
         log.info("Вызов удаление из таблицы Employee для empId = {}", empId);
         employeeRepository.deleteById((long) empId);
     }
-
 
 }
