@@ -1,36 +1,28 @@
 package ru.ipim.phonebook.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.minidev.json.JSONObject;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import liquibase.pro.packaged.T;
 
 import ru.ipim.phonebook.repository.EmployeeRepository;
 import ru.ipim.phonebook.repository.JobRepository;
 
-import ru.ipim.phonebook.model.Job;
-
 import ru.ipim.phonebook.model.Employee;
-import ru.ipim.phonebook.model.EmpExportType0;
-import ru.ipim.phonebook.model.EmpExportType1;
-import ru.ipim.phonebook.model.EmpExportType2;
 import ru.ipim.phonebook.model.StatCompanys;
+import ru.ipim.phonebook.model.EmpExportType1;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -47,7 +39,13 @@ public class EmployeeController {
         this.jobRepository = jobRepository;
     }
 
-    // Read List of Employees
+    // Все записи таблицы Employee
+    @GetMapping("/employees")
+    @ApiOperation("Получение списка всех записей")
+    public List<Employee> findAll() {
+        return employeeRepository.findAll();
+    }
+
     /*
     TODO: нужен вывод сотрудников вместе с должностями, как было сделано в master (у тебя только jobId):
     {
@@ -66,68 +64,6 @@ public class EmployeeController {
                }
     }
      */
-    @GetMapping("/employees")
-    @ApiOperation("Получение списка всех записей")
-    public List<Employee> findAll() {
-        return employeeRepository.findAll();
-    }
-
-    // Read List of Employees
-    // TODO: в таком виде вывод инфы не нужен (если есть уже предыдущий запрос)
-    // в логе написано, что это Выгрузка 1, но выгрузка у тебя ниже "/employees/export1"
-    @GetMapping("/employees-jobs")
-    @ApiOperation("Получение списка всех записей: join employee + job. Сортировка по Фамилии и имени")
-    public @ResponseBody List<JSONObject> findEmployeesJobs() {
-        List<EmpExportType0> entityList = employeeRepository.exportAllWithJPQL();
-
-        List<JSONObject> entities = new ArrayList<JSONObject>();
-        for (EmpExportType0 n : entityList) {
-            JSONObject entity = new JSONObject();
-            entity.put("lastName", n.getLastName());
-            entity.put("firstName", n.getFirstName());
-            entity.put("birthdate", n.getBirthdate().toString());
-            entity.put("mobilePhone", n.getMobilePhone());
-            entity.put("workPhone", n.getWorkPhone());
-            entity.put("email", n.getEmail());
-            entity.put("company", n.getCompany());
-            entity.put("jobTitle", n.getJobTitle());
-            entity.put("address", n.getAddress());
-            entities.add(entity);
-        }
-        log.info("Выгрузка тип 1. Телефонная книга с сортировкой по фамилии и имени, количество записей: {}", entityList.stream().count());
-        log.info("Подготовлены следующие данные: {}", entities);
-        return entities;
-
-    }
-
-    // TODO: это в ReportController уже есть. Зачем здесь?
-    @GetMapping("/employees-statistic")
-    @ApiOperation("Статистика - Количество записей в справочнике")
-    public String stat(){
-        employeeRepository.findAll();
-        return ("Record count in phonebook.employee: "+employeeRepository.count()) ;
-    }
-
-    // Статистика 'общее количество коллег по должности, организации, и адресу работы'
-    // TODO: это в ReportController должно быть. Зачем здесь?
-    @GetMapping("/employees-statistic2")
-    @ApiOperation("Статистика по таблице Телефонный справочник с агрегацией числа сотрудников с одинаковым job_id с сортировкой по убыванию количества")
-    public @ResponseBody List<JSONObject>  statCompany() {
-        List<StatCompanys> entityList = employeeRepository.findGroupByCompanysWithJPQL();
-
-        List<JSONObject> entities = new ArrayList<JSONObject>();
-        for (StatCompanys n : entityList) {
-            JSONObject entity = new JSONObject();
-            entity.put("company", n.getCompany()); // Наименование организации
-            entity.put("count",  n.getCnt());  // Количество сотрудников
-            entities.add(entity);
-        }
-        log.info("Количество записей в результате запроса: {}", entities.stream().count());
-        log.info("Подготовлены следующие данные: {}", entities);
-
-        return entities;
-    }
-
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Веб-форма поиска коллег по выбранному абоненту, в зависимости от выбранного флага:
@@ -204,82 +140,24 @@ public class EmployeeController {
      * Вставка новой записи в таблицу employee
      * SQL_UPDATE_PROFILE = "insert into employee (first_name, last_name, work_phone, mobile_phone, email, birthdate, job_id) values (:firstName,:lastName, :work_phone, :mobile_phone, :email, :birthdate, :job_id)";
      */
-    // TODO: эндпойнт должен быть @PostMapping("/employees"), без всяких add. Опять же, уже было. Не надо менять, что уже было!
-    @PostMapping("/employee-add")
+    @PostMapping("/employees")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation("Создание новой записи")
     public Employee createEmp(@Valid @RequestBody Employee employee) {
         return employeeRepository.save(employee);
     }
 
-    /**
-     * Read single Employee
-     */
+    // Получение одной записи по employee.id
     @GetMapping(value = "/employees/{employeeId}")
     @ApiOperation("Получение одиночной записи по employee.id")
     public Optional<Employee> findEmp(@PathVariable("employeeId") @Min(1) int employeeId) {
         return employeeRepository.findById((long) employeeId);
     }
 
-    /*
-    TODO: выгрузки лучше сделать отдельно, в отдельном контроллере, без префикса /employees. Они же не для работы с CRUD.
-    Можно назвать, например, @GetMapping("/export"). Плюс нужны параметры "Период времени, за который нужно выгрузить данные".
-    Тип выгрузки можно тоже параметром, а можно 2 отдельных эндпойнта /export1 и /export2, не принципиально.
-    Должно быть сохранение в файл и ответ, как в задании
-     */
-    // Выгрузка тип 1 : Телефонная книга с сортировкой по фамилии и имени
-    // поля : Фамилия, Имя, Рабочий телефон, Мобильный телефон, e-mail, Дата рождения
-    @GetMapping("/employees/export1")
-    @ApiOperation("Экспорт всех записей, тип экспорта 1. Телефонная книга с сортировкой по фамилии и имени")
-    public @ResponseBody List<JSONObject>  exportType1() {
-        List<EmpExportType1> entityList = employeeRepository.exportType1WithJPQL();
 
-        List<JSONObject> entities = new ArrayList<JSONObject>();
-        for (EmpExportType1 n : entityList) {
-            JSONObject entity = new JSONObject();
-            entity.put("lastName", n.getLastName());
-            entity.put("firstName", n.getFirstName());
-            entity.put("birthdate", n.getBirthdate().toString());
-            entity.put("mobilePhone", n.getMobilePhone());
-            entity.put("workPhone", n.getWorkPhone());
-            entity.put("email", n.getEmail());
-            entities.add(entity);
-        }
-        log.info("Выгрузка тип 1. Телефонная книга с сортировкой по фамилии и имени, количество записей: {}", entityList.stream().count());
-        log.info("Подготовлены следующие данные: {}", entities);
-        return entities;
-    }
-
-    // Выгрузка тип 2 : сотрудники с привязкой к местам работы.
-    // Поля: фамилия,имя, мобильный телефон, email +  Наименование организации, Должность, Рабочий адрес.
-    @GetMapping("/employees/export2")
-    @ApiOperation("Экспорт всех записей, тип экспорта 2")
-    public @ResponseBody List<JSONObject>  exportType2() {
-        List<EmpExportType2> entityList = employeeRepository.exportType2WithJPQL();
-
-        List<JSONObject> entities = new ArrayList<JSONObject>();
-        for (EmpExportType2 n : entityList) {
-            JSONObject entity = new JSONObject();
-            entity.put("lastName", n.getLastName());
-            entity.put("firstName", n.getFirstName());
-            entity.put("mobilePhone", n.getMobilePhone());
-            entity.put("email", n.getEmail());
-            entity.put("company", n.getCompany());
-            entity.put("jobTitle", n.getJobTitle());
-            entity.put("address", n.getAddress());
-            entities.add(entity);
-        }
-        log.info("Выгрузка тип 2. Телефонная книга с сортировкой по фамилии и имени, количество записей: {} - {}", entityList.stream().count());
-        log.info("Подготовлены следующие данные: {}", entities);
-        return entities;
-    }
-
-    /**
-     * Update Employee
-     * SQL_UPDATE_PROFILE = "update employee set first_name = :firstName, last_name = :lastName, .... where id = :id";
-     */
-    // TODO: эндпойнт должен быть @PutMapping("/employees/{employeeId}"), без -update
-    @PutMapping(value = "/employee-update/{employeeId}")
+    // Обновление записи
+    // SQL_UPDATE_PROFILE = "update employee set first_name = :firstName, last_name = :lastName, .... where id = :id";
+    @PutMapping(value = "/employees/{employeeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation("Обновление существующей записи")
     public void updateEmp(@PathVariable("employeeId") @Min(1) int employeeId, @Valid @RequestBody Employee empRequest) {
@@ -299,8 +177,7 @@ public class EmployeeController {
         employeeRepository.save(empModel);
     }
 
-    // TODO: эндпойнт должен быть @DeleteMapping("/employees/{employeeId}"), без -delete
-    @DeleteMapping(value = "/employee-delete/{employeeId}")
+    @DeleteMapping(value = "/employees/{employeeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation("Удаление записи")
     public void deleteEmp(@PathVariable("employeeId") @Min(1) int employeeId) {
