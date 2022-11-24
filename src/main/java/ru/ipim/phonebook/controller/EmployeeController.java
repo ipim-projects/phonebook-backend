@@ -48,6 +48,24 @@ public class EmployeeController {
     }
 
     // Read List of Employees
+    /*
+    TODO: нужен вывод сотрудников вместе с должностями, как было сделано в master (у тебя только jobId):
+    {
+        "id": 1,
+        "firstName": "Илон",
+        "lastName": "Маск",
+        "birthdate": 46904400000,
+        "mobilePhone": "123-111-11-01",
+        "workPhone": "495-111-11-01",
+        "email": "ilon@cbr.ru",
+        "job": {
+                  "id": 2,
+                  "company": "Amazon",
+                  "jobTitle": "Глава Amazon",
+                  "address": "AddressAmazon"
+               }
+    }
+     */
     @GetMapping("/employees")
     @ApiOperation("Получение списка всех записей")
     public List<Employee> findAll() {
@@ -55,6 +73,8 @@ public class EmployeeController {
     }
 
     // Read List of Employees
+    // TODO: в таком виде вывод инфы не нужен (если есть уже предыдущий запрос)
+    // в логе написано, что это Выгрузка 1, но выгрузка у тебя ниже "/employees/export1"
     @GetMapping("/employees-jobs")
     @ApiOperation("Получение списка всех записей: join employee + job. Сортировка по Фамилии и имени")
     public @ResponseBody List<JSONObject> findEmployeesJobs() {
@@ -79,6 +99,8 @@ public class EmployeeController {
         return entities;
 
     }
+
+    // TODO: это в ReportController уже есть. Зачем здесь?
     @GetMapping("/employees-statistic")
     @ApiOperation("Статистика - Количество записей в справочнике")
     public String stat(){
@@ -87,6 +109,7 @@ public class EmployeeController {
     }
 
     // Статистика 'общее количество коллег по должности, организации, и адресу работы'
+    // TODO: это в ReportController должно быть. Зачем здесь?
     @GetMapping("/employees-statistic2")
     @ApiOperation("Статистика по таблице Телефонный справочник с агрегацией числа сотрудников с одинаковым job_id с сортировкой по убыванию количества")
     public @ResponseBody List<JSONObject>  statCompany() {
@@ -181,6 +204,7 @@ public class EmployeeController {
      * Вставка новой записи в таблицу employee
      * SQL_UPDATE_PROFILE = "insert into employee (first_name, last_name, work_phone, mobile_phone, email, birthdate, job_id) values (:firstName,:lastName, :work_phone, :mobile_phone, :email, :birthdate, :job_id)";
      */
+    // TODO: эндпойнт должен быть @PostMapping("/employees"), без всяких add. Опять же, уже было. Не надо менять, что уже было!
     @PostMapping("/employee-add")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation("Создание новой записи")
@@ -197,6 +221,12 @@ public class EmployeeController {
         return employeeRepository.findById((long) employeeId);
     }
 
+    /*
+    TODO: выгрузки лучше сделать отдельно, в отдельном контроллере, без префикса /employees. Они же не для работы с CRUD.
+    Можно назвать, например, @GetMapping("/export"). Плюс нужны параметры "Период времени, за который нужно выгрузить данные".
+    Тип выгрузки можно тоже параметром, а можно 2 отдельных эндпойнта /export1 и /export2, не принципиально.
+    Должно быть сохранение в файл и ответ, как в задании
+     */
     // Выгрузка тип 1 : Телефонная книга с сортировкой по фамилии и имени
     // поля : Фамилия, Имя, Рабочий телефон, Мобильный телефон, e-mail, Дата рождения
     @GetMapping("/employees/export1")
@@ -248,6 +278,7 @@ public class EmployeeController {
      * Update Employee
      * SQL_UPDATE_PROFILE = "update employee set first_name = :firstName, last_name = :lastName, .... where id = :id";
      */
+    // TODO: эндпойнт должен быть @PutMapping("/employees/{employeeId}"), без -update
     @PutMapping(value = "/employee-update/{employeeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation("Обновление существующей записи")
@@ -268,6 +299,7 @@ public class EmployeeController {
         employeeRepository.save(empModel);
     }
 
+    // TODO: эндпойнт должен быть @DeleteMapping("/employees/{employeeId}"), без -delete
     @DeleteMapping(value = "/employee-delete/{employeeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation("Удаление записи")
