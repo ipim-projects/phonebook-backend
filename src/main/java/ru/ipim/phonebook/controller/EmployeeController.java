@@ -112,7 +112,7 @@ public class EmployeeController {
     // 1. Флаг  - "сотрудники одной и той же с ним организации"
     @GetMapping(value = "/employees/{employeeId}/coworkers-company")
     @ApiOperation("Поиск коллег по входному параметру (employeeId): сотрудники одной и той же с ним организации")
-    public @ResponseBody List<JSONObject> findCoworkersCompany(@PathVariable("{employeeId}") @Min(1) Long employeeId) {
+    public @ResponseBody List<JSONObject> findCoworkersCompany(@PathVariable("employeeId") @Min(1) Long employeeId) {
         List<EmpExportType1> entityList = employeeRepository.findCoworkersCompanyWithJPQL(employeeId);
 
         List<JSONObject> entities = new ArrayList<JSONObject>();
