@@ -1,30 +1,20 @@
 package ru.ipim.phonebook.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.minidev.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import liquibase.pro.packaged.T;
 
 import ru.ipim.phonebook.repository.EmployeeRepository;
 import ru.ipim.phonebook.repository.JobRepository;
 
-import ru.ipim.phonebook.model.Employee;
 import ru.ipim.phonebook.model.StatCompanys;
-import ru.ipim.phonebook.util.DirSettings;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @Slf4j
