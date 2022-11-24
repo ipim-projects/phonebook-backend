@@ -74,5 +74,4 @@ public class ReportController {
         return entities;
     }
 
-
 }

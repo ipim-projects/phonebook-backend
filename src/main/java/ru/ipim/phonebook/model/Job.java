@@ -15,20 +15,19 @@ import java.io.Serializable;
 @Table(name = "job")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Job implements Serializable {
-
     @Id
     @SequenceGenerator(name = "jobIdSeq", sequenceName = "job_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "jobIdSeq")
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "company", nullable = false)
+    @Column(nullable = false)
     private String company;
 
     @Column(name = "job_title", nullable = false)
     private String jobTitle;
 
-    @Column(name = "address")
+    @Column
     private String address;
 
     @Override

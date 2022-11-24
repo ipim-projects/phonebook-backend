@@ -10,8 +10,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
-//import java.time.LocalDate;
+import java.time.LocalDate;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
@@ -22,7 +21,6 @@ import java.util.Date;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @DynamicInsert
 public class Employee implements Serializable {
-
     @Id
     @SequenceGenerator(name = "employeeIdSeq", sequenceName = "employee_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employeeIdSeq")
@@ -35,10 +33,9 @@ public class Employee implements Serializable {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "birthdate", columnDefinition = "DATE", nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date birthdate;
-    //ig: private LocalDate birthdate;
+    @Column(columnDefinition = "DATE", nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birthdate;
 
     @Column(name = "mobile_phone", unique = true, nullable = false)
     private String mobilePhone;
@@ -46,20 +43,26 @@ public class Employee implements Serializable {
     @Column(name = "work_phone")
     private String workPhone;
 
-    @Column(name = "email", unique = true)
+    @Column(unique = true)
     private String email;
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMP")
     @JsonIgnore
     @ColumnDefault("now()")
-    private Date createdAt;
-    //ig: private LocalDate createdAt;
+    private LocalDate createdAt;
 
-    //@ManyToOne(fetch = FetchType.EAGER)
-    //@JoinColumn(name = "job_id")
-    //private Job job;
-    @Column(name = "job_id")
-    private Long jobId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "job_id")
+    private Job job;
+
+    public Employee(String firstName, String lastName, LocalDate birthdate, String mobilePhone, String workPhone, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthdate = birthdate;
+        this.mobilePhone = mobilePhone;
+        this.workPhone = workPhone;
+        this.email = email;
+    }
 
     @Override
     public String toString() {
@@ -71,8 +74,10 @@ public class Employee implements Serializable {
                 .append("mobilePhone", this.getMobilePhone())
                 .append("email", this.getEmail())
                 .append("birthDate", this.getBirthdate())
-                .append("jobId", this.getJobId())
-                //.append("jobTitle", this.getJob().getJobTitle())
+                .append("jobId", this.getJob().getId())
+                .append("jobTitle", this.getJob().getJobTitle())
+                .append("jobTitle", this.getJob().getAddress())
+                .append("jobTitle", this.getJob().getCompany())
                 .toString();
     }
 

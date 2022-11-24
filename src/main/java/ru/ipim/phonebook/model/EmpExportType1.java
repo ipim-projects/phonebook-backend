@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.core.style.ToStringCreator;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 //Response Model
 @Data
@@ -16,7 +16,7 @@ import java.util.Date;
 public class EmpExportType1 {
     private String firstName;
     private String lastName;
-    private Date birthdate;
+    private LocalDate birthdate;
     private String mobilePhone;
     private String workPhone;
     private String email;

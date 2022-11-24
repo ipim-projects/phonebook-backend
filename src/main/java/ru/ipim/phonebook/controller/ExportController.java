@@ -157,30 +157,4 @@ public class ExportController {
         return entities;
     }
 
-    // Записи талицы Employee дополненные местом работы, должностью, адресом, если нет места работы, то запись не выводится
-    @GetMapping("/export-test")
-    @ApiOperation("Получение списка всех записей: join employee + job. Сортировка по Фамилии и имени")
-    public @ResponseBody List<JSONObject> findEmployeesJobs() {
-        List<EmpExportType0> entityList = employeeRepository.exportAllWithJPQL();
-
-        List<JSONObject> entities = new ArrayList<JSONObject>();
-        for (EmpExportType0 n : entityList) {
-            JSONObject entity = new JSONObject();
-            entity.put("lastName", n.getLastName());
-            entity.put("firstName", n.getFirstName());
-            entity.put("birthdate", n.getBirthdate().toString());
-            entity.put("mobilePhone", n.getMobilePhone());
-            entity.put("workPhone", n.getWorkPhone());
-            entity.put("email", n.getEmail());
-            entity.put("company", n.getCompany());
-            entity.put("jobTitle", n.getJobTitle());
-            entity.put("address", n.getAddress());
-            entities.add(entity);
-        }
-        log.info("Получение списка всех записей: join employee + job, количество записей: {}", (long) entityList.size());
-        log.info("Подготовлены следующие данные: {}", entities);
-        return entities;
-
-    }
-
 }

@@ -1,19 +1,15 @@
 package ru.ipim.phonebook.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.minidev.json.JSONObject;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import ru.ipim.phonebook.exception.ResourceNotFoundException;
 import ru.ipim.phonebook.model.Job;
 import ru.ipim.phonebook.model.StatAddress;
 import ru.ipim.phonebook.model.StatCompany;
@@ -21,7 +17,6 @@ import ru.ipim.phonebook.repository.JobRepository;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
