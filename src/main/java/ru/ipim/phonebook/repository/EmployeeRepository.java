@@ -10,6 +10,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     @Query("SELECT COUNT(e) FROM Employee e WHERE e.createdAt >= CURRENT_DATE - 30")
     long countForMonth();
 
-    @Query("SELECT e FROM Employee e WHERE e.job.company = (SELECT e1.job.company FROM Employee e1 WHERE e1.id = ?1)")
+    @Query("SELECT e FROM Employee e WHERE e.id <> ?1" +
+            "AND e.job.company = (SELECT e1.job.company FROM Employee e1 WHERE e1.id = ?1)")
     List<Employee> getCompanyCoworkers(Long employeeId);
 }

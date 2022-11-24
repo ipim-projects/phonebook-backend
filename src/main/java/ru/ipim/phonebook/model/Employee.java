@@ -50,4 +50,13 @@ public class Employee implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "job_id")
     private Job job;
+
+    public Employee(String firstName, String lastName, LocalDate birthdate, String mobilePhone, String workPhone, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthdate = birthdate;
+        this.mobilePhone = mobilePhone;
+        this.workPhone = workPhone;
+        this.email = email;
+    }
 }

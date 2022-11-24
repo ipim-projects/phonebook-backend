@@ -2,7 +2,7 @@ package ru.ipim.phonebook.controller;
 
 import org.springframework.web.bind.annotation.*;
 
-import ru.ipim.phonebook.model.Job;
+import ru.ipim.phonebook.dto.EmployeeDto;
 import ru.ipim.phonebook.repository.EmployeeRepository;
 import ru.ipim.phonebook.model.Employee;
 import ru.ipim.phonebook.repository.JobRepository;
@@ -31,11 +31,19 @@ public class EmployeeController {
     }
 
     @PostMapping("/employees")
-    Employee createOrSaveEmployee(@RequestBody Employee newEmployee) {
-        Job job = newEmployee.getJob();
-        if (job != null && job.getId() != null) {
-            job = jobRepository.findById(job.getId()).get();
-            newEmployee.setJob(job);
+    Employee createEmployee(@RequestBody EmployeeDto newEmployeeDto) {
+        Employee newEmployee = new Employee(
+                newEmployeeDto.getFirstName(),
+                newEmployeeDto.getLastName(),
+                newEmployeeDto.getBirthdate(),
+                newEmployeeDto.getMobilePhone(),
+                newEmployeeDto.getWorkPhone(),
+                newEmployeeDto.getEmail()
+        );
+        Long jobId = newEmployeeDto.getJobId();
+        if (jobId != null) {
+            jobRepository.findById(jobId).ifPresentOrElse(newEmployee::setJob,
+                    () -> System.out.println("Место работы не найдено"));
         }
         return employeeRepository.save(newEmployee);
     }
