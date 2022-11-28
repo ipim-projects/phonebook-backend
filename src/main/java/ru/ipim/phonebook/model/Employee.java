@@ -2,7 +2,9 @@ package ru.ipim.phonebook.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
+import org.springframework.core.style.ToStringCreator;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -15,11 +17,13 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-@Table
+@Table(name = "employee")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @DynamicInsert
 public class Employee implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "employeeIdSeq", sequenceName = "employee_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employeeIdSeq")
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
@@ -59,4 +63,22 @@ public class Employee implements Serializable {
         this.workPhone = workPhone;
         this.email = email;
     }
+
+    @Override
+    public String toString() {
+        return new ToStringCreator(this)
+                .append("id", this.getId())
+                .append("firstName", this.getFirstName())
+                .append("lastName", this.getLastName())
+                .append("workPhone", this.getWorkPhone())
+                .append("mobilePhone", this.getMobilePhone())
+                .append("email", this.getEmail())
+                .append("birthDate", this.getBirthdate())
+                .append("jobId", this.getJob().getId())
+                .append("jobTitle", this.getJob().getJobTitle())
+                .append("jobTitle", this.getJob().getAddress())
+                .append("jobTitle", this.getJob().getCompany())
+                .toString();
+    }
+
 }

@@ -29,3 +29,93 @@ GET http://localhost:8080/employees/1
 GET http://localhost:8080/reports/employee/count-month
 
 ###
+
+################################################
+# imported from Swagger
+# Swagger UI http://localhost:8080/v2/api-docs
+# Описание использования API.
+################################################
+
+#
+#1. Employee Controller
+#
+
+#Получение списка всех записей
+GET http://localhost:8080/employees
+
+#Получение одиночной записи по employee.id
+#GET http://localhost:8080/employees/{employeeId}
+GET http://localhost:8080/employees/1
+
+#Поиск коллег по входному параметру (employeeId): сотрудники из разных организаций, но работающих с ним по одному и тому же адресу
+#GET http://localhost:8080/employees/{employeeId}/coworkers-address
+GET http://localhost:8080/employees/1/coworkers-address
+
+#Поиск коллег по входному параметру (employeeId): сотрудники одной и той же с ним организации
+#GET http://localhost:8080/employees/{employeeId}/coworkers-company
+GET http://localhost:8080/employees/1/coworkers-company
+
+#Поиск коллег по входному параметру (employeeId): сотрудники из разных организаций, но с такой же должностью
+#GET http://localhost:8080/employees/{employeeId}/coworkers-job
+GET http://localhost:8080/employees/1/coworkers-job
+
+#POST http://localhost:8080/employee-add
+#Создание новой записи
+
+DELETE http://localhost:8080/employee-delete/1
+#Удаление записи
+
+#PUT http://localhost:8080/employee-update/1
+#Обновление существующей записи
+
+GET http://localhost:8080/employees-jobs
+#Получение списка всех записей: join employee + job. Сортировка по Фамилии и имени
+
+GET http://localhost:8080/employees-statistic
+#Статистика - Количество записей в справочнике
+
+GET http://localhost:8080/employees-statistic2
+#Статистика по таблице Телефонный справочник с агрегацией числа сотрудников с одинаковым job_id с сортировкой по убыванию количества
+
+GET http://localhost:8080/employees/export1
+#Экспорт всех записей, тип экспорта 1. Телефонная книга с сортировкой по фамилии и имени
+
+GET http://localhost:8080/employees/export2
+#Экспорт всех записей, тип экспорта 2
+#
+
+
+#2. Job Controller
+#
+#
+GET  http://localhost:8080/jobs
+#Получение списка всех записей
+GET  http://localhost:8080/jobs/{jobId}
+#Получение записи по job.id
+#POST http://localhost:8080/jobs/add
+#Создание новой записи
+#DELETE http://localhost:8080/jobs/delete/{jobId}
+#Удаление записи
+GET http://localhost:8080/jobs/statistic
+#Статистика - Количество записей в справочнике Job
+GET http://localhost:8080/jobs/statistic1
+#Статистика по таблице место работы с агрегацией по компаниям с сортировкой по убыванию по числу коvпаний
+GET http://localhost:8080/jobs/statistic2
+#Статистика по таблице место работы с агрегацией по адресу с сортировкой по убыванию по числу одинаковых адресов
+#PUT http://localhost:8080/jobs/update/{jobId}
+#Обновление существующей записи
+
+
+#
+#3. Report Controller
+#
+GET http://localhost:8080/reports/employee/count-all
+#countAllEmployees
+GET http://localhost:8080/reports/employee/count-month
+#countEmployeesForMonth
+GET http://localhost:8080/reports/job/count-all
+#countAllJobs
+#Models
+#Employee
+#Job
+
